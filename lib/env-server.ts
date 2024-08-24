@@ -11,6 +11,10 @@ export const ServerEnv = createEnv({
     SMTP_SERVER_PASSWORD: z.string().min(1),
     SITE_MAIL_RECIEVER: z.string().email(),
     LOGTAIL_SOURCE_TOKEN: z.string().min(1),
+    QSTASH_TOKEN: z.string().min(1),
+    QSTASH_CURRENT_SIGNING_KEY: z.string().min(1),
+    QSTASH_NEXT_SIGNING_KEY: z.string().min(1),
+    URL: z.string().min(1),
   },
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually
   // runtimeEnv: {

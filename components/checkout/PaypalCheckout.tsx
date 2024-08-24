@@ -83,8 +83,6 @@ export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
             toast.info("Payment cancelled.");
           }}
           onError={(err) => {
-            console.log(err);
-
             toast.error("An error occurred. Please try again.");
           }}
         />

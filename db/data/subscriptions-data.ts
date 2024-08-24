@@ -10,7 +10,6 @@ const getOrderById = async (orderId: string) => {
     .select("*")
     .eq("id", orderId)
     .single();
-  console.log(data);
 
   return handleStatus(status, data, error) as Subscriptions;
 };

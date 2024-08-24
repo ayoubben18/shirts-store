@@ -1,5 +1,7 @@
 import { updateSubscription } from "@/db/data/subscriptions-data";
+import { ServerEnv } from "@/lib/env-server";
 import logger from "@/lib/logger";
+import { qstash } from "@/lib/qstash";
 import { StatusEnum } from "@/types/tableTypes";
 import { paypalClient } from "@/utils/paypal";
 import paypal from "@paypal/checkout-server-sdk";
@@ -12,8 +14,6 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { orderID, id } = body;
   try {
-    console.log({ orderID, id });
-
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     // @ts-ignore
     request.requestBody({});
@@ -25,15 +25,32 @@ export async function POST(request: Request) {
       throw new Error("Failed to capture order");
     }
 
-    await updateSubscription(id, {
+    const updateObject = {
       status: StatusEnum.Paid,
       order_id: response.result.id,
       email: response.result.payment_source.paypal.email_address,
       country_code: response.result.payment_source.paypal.address.country_code,
       full_name: response.result.purchase_units[0].shipping.name.full_name,
-    });
+    };
 
-    logger.info({ response, id }, "Capture order response");
+    try {
+      await updateSubscription(id, updateObject).then(() => {
+        logger.info("Capture order response", { response, id });
+      });
+    } catch (error) {
+      logger.warn(
+        "Error updating subscription in database, switching to qstash:",
+        { error },
+      );
+      await qstash.publish({
+        retries: 6,
+        method: "POST",
+        url: `${ServerEnv.URL}/api/confirm`,
+        body: JSON.stringify({ id, updateObject }),
+        failureCallback: `${ServerEnv.URL}/api/failure?id=${id}`,
+      });
+    }
+
     return NextResponse.json({ orderID: response.result.id });
   } catch (error: any) {
     logger.error("Error capturing order:", { error });

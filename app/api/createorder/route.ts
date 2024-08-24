@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { price, id } = body;
   try {
-    logger.info({ price, id }, "Create order request");
     const paypalReq = new paypal.orders.OrdersCreateRequest();
     paypalReq.requestBody({
       intent: "CAPTURE",
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     const response = await paypalClient.execute(paypalReq);
 
-    logger.info({ response }, "Create order response");
+    logger.info("Create order response", { response, price, id });
 
     return NextResponse.json({ orderID: response.result.id }, { status: 201 });
   } catch (error: any) {
