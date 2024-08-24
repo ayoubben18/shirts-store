@@ -4,24 +4,29 @@ import { supabase } from "@/clients/supabaseCLient";
 import { handleStatus } from "@/lib/handleStatus";
 import { Subscriptions } from "@/types/tableTypes";
 
-const insertSubscription = async (
-  props: Omit<Subscriptions, "id" | "created_at">,
+const getOrderById = async (orderId: string) => {
+  const { data, error, status } = await supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("id", orderId)
+    .single();
+  console.log(data);
+
+  return handleStatus(status, data, error) as Subscriptions;
+};
+
+const updateSubscription = async (
+  id: string,
+  props: Partial<Subscriptions>,
 ) => {
   const { data, error, status } = await supabase
     .from("subscriptions")
-    .insert(props)
+    //@ts-ignore
+    .update(props)
+    .eq("id", id)
     .select("*")
     .single();
   return handleStatus(status, data, error) as Subscriptions;
 };
 
-const getSubscriptions = async (userId: string) => {
-  const { data, error, status } = await supabase
-    .from("subscriptions")
-    .select("*")
-    .eq("user_id", userId);
-
-  return handleStatus(status, data, error) as Subscriptions[];
-};
-
-export { insertSubscription, getSubscriptions };
+export { getOrderById, updateSubscription };

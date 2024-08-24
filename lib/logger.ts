@@ -23,8 +23,15 @@
 //   transport,
 // );
 
-import { log } from "@logtail/next";
+// import { log } from "@logtail/next";
 
-const logger = log;
+// const logger = log;
+
+// export default logger;
+
+import pino from "pino";
+import pretty from "pino-pretty";
+
+const logger = pino(pretty());
 
 export default logger;

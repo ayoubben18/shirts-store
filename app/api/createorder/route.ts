@@ -7,9 +7,9 @@ export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { price, plan } = body;
+  const { price, id } = body;
   try {
-    logger.info("Create order request", { price, plan });
+    logger.info({ price, id }, "Create order request");
     const paypalReq = new paypal.orders.OrdersCreateRequest();
     paypalReq.requestBody({
       intent: "CAPTURE",
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     const response = await paypalClient.execute(paypalReq);
 
-    logger.info("Create order response", { response });
+    logger.info({ response }, "Create order response");
 
     return NextResponse.json({ orderID: response.result.id }, { status: 201 });
   } catch (error: any) {

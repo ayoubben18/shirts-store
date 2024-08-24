@@ -1,9 +1,8 @@
-import { insertSubscriptionService } from "@/db/service/subscription-service";
+import { updateSubscription } from "@/db/data/subscriptions-data";
 import logger from "@/lib/logger";
-import { planPrices, SubscriptionPlan } from "@/types/tableTypes";
+import { StatusEnum } from "@/types/tableTypes";
 import { paypalClient } from "@/utils/paypal";
 import paypal from "@paypal/checkout-server-sdk";
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { HttpResponse } from "paypal__paypalhttp";
 
@@ -11,9 +10,10 @@ export const revalidate = 0;
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { orderID } = body;
+  const { orderID, id } = body;
   try {
-    logger.info("Capture order request", { orderID });
+    console.log({ orderID, id });
+
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     // @ts-ignore
     request.requestBody({});
@@ -25,28 +25,15 @@ export async function POST(request: Request) {
       throw new Error("Failed to capture order");
     }
 
-    const mockedObject = {
+    await updateSubscription(id, {
+      status: StatusEnum.Paid,
       order_id: response.result.id,
       email: response.result.payment_source.paypal.email_address,
       country_code: response.result.payment_source.paypal.address.country_code,
       full_name: response.result.purchase_units[0].shipping.name.full_name,
-      price: Number.parseFloat(
-        response.result.purchase_units[0].payments.captures[0].amount.value,
-      ),
-    };
-    const subs = await insertSubscriptionService({
-      ...mockedObject,
-      plan:
-        mockedObject.price === planPrices[SubscriptionPlan.Monthly]
-          ? SubscriptionPlan.Monthly
-          : mockedObject.price === planPrices[SubscriptionPlan.Quarterly]
-            ? SubscriptionPlan.Quarterly
-            : mockedObject.price === planPrices[SubscriptionPlan.SemiAnnual]
-              ? SubscriptionPlan.SemiAnnual
-              : SubscriptionPlan.Annual,
     });
-    revalidatePath("/profile");
-    logger.info("Capture order response", { order: subs?.data });
+
+    logger.info({ response, id }, "Capture order response");
     return NextResponse.json({ orderID: response.result.id });
   } catch (error: any) {
     logger.error("Error capturing order:", { error });

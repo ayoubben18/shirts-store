@@ -1,22 +1,22 @@
 "use client";
 
-import { usePlanStore, plans } from "@/stores/usePlanStore";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
-import { redirect, RedirectType, useRouter } from "next/navigation";
-import { useQueryState } from "nuqs";
+interface PayPalCheckoutProps {
+  price: string;
+  id: string;
+}
 
-export default function PayPalCheckout() {
+export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
   const [{ isPending }] = usePayPalScriptReducer();
   const { push } = useRouter();
 
-  const [plan] = useQueryState("plan");
-
   const createOrder = async () => {
     const reqBodyJson = {
-      plan: plan,
-      price: plans.find((p) => p.name === plan)?.price,
+      id: id,
+      price: price,
     };
     const response = await fetch("/api/createorder", {
       method: "POST",
@@ -45,7 +45,7 @@ export default function PayPalCheckout() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderID: data.orderID }),
+      body: JSON.stringify({ orderID: data.orderID, id: id }),
       next: {
         revalidate: 0,
       },
@@ -54,7 +54,7 @@ export default function PayPalCheckout() {
     const orderData = await response.json();
     if (response.ok) {
       toast.success("Payment successful!");
-      push("https://ronotv.com/profile");
+      push(`/success?id=${id}`);
     } else {
       throw new Error(orderData.error || "Failed to capture order");
     }
@@ -76,7 +76,7 @@ export default function PayPalCheckout() {
             tagline: false,
             color: "silver",
           }}
-          forceReRender={[plan]}
+          forceReRender={[id]}
           createOrder={createOrder}
           onApprove={onApprove}
           onCancel={() => {

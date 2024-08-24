@@ -6,7 +6,6 @@ import { Toaster } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import ApolloClientProvider from "@/providers/ApolloProvider";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
 
@@ -25,28 +24,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ApolloClientProvider>
-      <QueryProvider>
-        <html lang="en">
-          <body
-            className={cn(
-              "min-h-screen bg-background font-sans antialiased",
-              fontSans.variable,
-            )}
+    <QueryProvider>
+      <html lang="en">
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable,
+          )}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            disableTransitionOnChange
           >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              disableTransitionOnChange
-            >
-              <Toaster richColors position="top-center" theme="dark" />
-              <NavBar />
-              {children}
-              <Footer />
-            </ThemeProvider>
-          </body>
-        </html>
-      </QueryProvider>
-    </ApolloClientProvider>
+            <Toaster richColors position="top-center" theme="dark" />
+            <NavBar />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </body>
+      </html>
+    </QueryProvider>
   );
 }
