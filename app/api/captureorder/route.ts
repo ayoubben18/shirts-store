@@ -35,12 +35,15 @@ export async function POST(request: Request) {
 
     try {
       await updateSubscription(id, updateObject).then(() => {
-        logger.info("Capture order response", { response, id });
+        logger.info(
+          `Capture order response order_id:${updateObject.order_id}, id:${id}`,
+          { response, id },
+        );
       });
     } catch (error) {
       logger.warn(
         "Error updating subscription in database, switching to qstash:",
-        { error },
+        { error, id, updateObject },
       );
       await qstash.publish({
         retries: 6,

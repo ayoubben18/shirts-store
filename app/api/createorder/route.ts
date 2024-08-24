@@ -24,7 +24,14 @@ export async function POST(request: NextRequest) {
 
     const response = await paypalClient.execute(paypalReq);
 
-    logger.info("Create order response", { response, price, id });
+    logger.info(
+      `Create order response order_id:${response.result.id}, id:${id}`,
+      {
+        response,
+        price,
+        id,
+      },
+    );
 
     return NextResponse.json({ orderID: response.result.id }, { status: 201 });
   } catch (error: any) {
