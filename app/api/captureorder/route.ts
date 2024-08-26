@@ -2,7 +2,7 @@ import { updateSubscription } from "@/db/data/subscriptions-data";
 import { ServerEnv } from "@/lib/env-server";
 import logger from "@/lib/logger";
 import { qstash } from "@/lib/qstash";
-import { StatusEnum } from "@/types/tableTypes";
+import { StatusEnum, Subscriptions } from "@/types/tableTypes";
 import { paypalClient } from "@/utils/paypal";
 import paypal from "@paypal/checkout-server-sdk";
 import { NextResponse } from "next/server";
@@ -12,7 +12,7 @@ export const revalidate = 0;
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { orderID, id } = body;
+  const { orderID, id, mock } = body;
   try {
     const request = new paypal.orders.OrdersCaptureRequest(orderID);
     // @ts-ignore
@@ -25,18 +25,23 @@ export async function POST(request: Request) {
       throw new Error("Failed to capture order");
     }
 
-    const updateObject = {
+    if (mock) {
+      return NextResponse.json({ orderID: response.result.id });
+    }
+
+    const updateObject: Partial<Subscriptions> = {
       status: StatusEnum.Paid,
-      order_id: response.result.id,
-      email: response.result.payment_source.paypal.email_address,
+      payement_order_id: response.result.id,
+      payement_email: response.result.payment_source.paypal.email_address,
       country_code: response.result.payment_source.paypal.address.country_code,
-      full_name: response.result.purchase_units[0].shipping.name.full_name,
+      payement_full_name:
+        response.result.purchase_units[0].shipping.name.full_name,
     };
 
     try {
       await updateSubscription(id, updateObject).then(() => {
         logger.info(
-          `Capture order response order_id:${updateObject.order_id}, id:${id}`,
+          `Capture order response order_id:${updateObject.payement_order_id}, id:${id}`,
           { response, id },
         );
       });

@@ -12,7 +12,7 @@ export const POST = verifySignatureAppRouter(async (req: Request) => {
   };
 
   logger.warn(
-    `Subscription paid but not confirmed id=${id}, order_id:${updateObject.order_id}`,
+    `Subscription paid but not confirmed id=${id}, order_id:${updateObject.payement_order_id}`,
     {
       id,
       updateObject,

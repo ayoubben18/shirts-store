@@ -1,40 +1,11 @@
 "use client";
 import React from "react";
 import { Button } from "../ui/button";
-import { plans } from "@/constants/plans";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-const shirts: Props[] = [
-  {
-    name: "One shirt",
-    price: plans[0].price,
-    description:
-      "A classic vintage-inspired t-shirt with a soft, comfortable feel.",
-    image: "/shirt.jpg",
-  },
-  {
-    name: "Three shirts",
-    price: plans[1].price,
-    description:
-      "A classic vintage-inspired t-shirt with a soft, comfortable feel.",
-    image: "/shirt.jpg",
-  },
-  {
-    name: "Seven shirts",
-    price: plans[2].price,
-    description:
-      "A classic vintage-inspired t-shirt with a soft, comfortable feel.",
-    image: "/shirt.jpg",
-  },
-  {
-    name: "Ten shirts",
-    price: plans[3].price,
-    description:
-      "A classic vintage-inspired t-shirt with a soft, comfortable feel.",
-    image: "/shirt.jpg",
-  },
-];
+import { Shirt, shirts } from "@/constants/shirts";
+import { useShirtStore } from "@/stores/useShirtsStore";
+import Link from "next/link";
 
 const PaginatedCards = () => {
   return (
@@ -46,38 +17,55 @@ const PaginatedCards = () => {
   );
 };
 
-interface Props {
-  name: string;
-  price: string;
-  description: string;
-  image: string;
-}
-
-const ShirtsCard = ({ name, description, price, image }: Props) => {
+export const ShirtsCard = ({ id, name, description, price, image }: Shirt) => {
   const router = useRouter();
   const handleClick = () => {
-    const plan = plans.find((p) => p.price === price.toString())!;
-    router.push(`/checkout?plan=${plan.name}`);
+    if (isInCart) {
+      removeShirt({ id, name, description, price, image });
+    } else {
+      addShirt({ id, name, description, price, image });
+    }
   };
+
+  const handleBuyNow = () => {
+    addShirt({ id, name, description, price, image });
+    router.push(`/informations`);
+  };
+
+  const { addShirt, removeShirt, shirts } = useShirtStore();
+  const isInCart = shirts.some((shirt) => shirt.id === id);
   return (
     <div className="overflow-hidden rounded-lg bg-card shadow-sm transition-all hover:shadow-lg">
-      <Image
-        priority
-        src={image}
-        alt="T-Shirt 1"
-        width={400}
-        height={500}
-        className="h-[300px] w-full object-cover"
-        style={{ aspectRatio: "400/500", objectFit: "cover" }}
-      />
+      <Link href={`/shirt/${id}`}>
+        <div className="relative">
+          <Image
+            priority
+            src={image}
+            alt="T-Shirt 1"
+            width={400}
+            height={500}
+            className="h-full w-full object-cover"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      </Link>
       <div className="space-y-2 p-4">
         <h3 className="text-lg font-semibold">{name}</h3>
         <p className="text-sm text-muted-foreground">{description}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between gap-2">
           <span className="text-2xl font-bold">${price}</span>
-          <Button size="sm" onClick={handleClick}>
-            Add to Cart
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant={isInCart ? "destructive" : "outline"}
+              onClick={handleClick}
+            >
+              {isInCart ? "Remove from Cart" : "Add to Cart"}
+            </Button>
+            <Button size="sm" onClick={handleBuyNow}>
+              Buy Now
+            </Button>
+          </div>
         </div>
       </div>
     </div>

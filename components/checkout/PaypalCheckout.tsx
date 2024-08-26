@@ -7,9 +7,14 @@ import { Skeleton } from "../ui/skeleton";
 interface PayPalCheckoutProps {
   price: string;
   id: string;
+  mock: boolean;
 }
 
-export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
+export default function PayPalCheckout({
+  price,
+  id,
+  mock,
+}: PayPalCheckoutProps) {
   const [{ isPending }] = usePayPalScriptReducer();
   const { push } = useRouter();
 
@@ -45,7 +50,7 @@ export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ orderID: data.orderID, id: id }),
+      body: JSON.stringify({ orderID: data.orderID, id: id, mock }),
       next: {
         revalidate: 0,
       },
@@ -54,7 +59,7 @@ export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
     const orderData = await response.json();
     if (response.ok) {
       toast.success("Payment successful!");
-      push(`/success?id=${id}`);
+      push(mock ? `/success` : `/success?id=${id}`);
     } else {
       throw new Error(orderData.error || "Failed to capture order");
     }
@@ -76,7 +81,7 @@ export default function PayPalCheckout({ price, id }: PayPalCheckoutProps) {
             tagline: false,
             color: "silver",
           }}
-          forceReRender={[id]}
+          forceReRender={[id, mock, price]}
           createOrder={createOrder}
           onApprove={onApprove}
           onCancel={() => {

@@ -1,5 +1,5 @@
 import logger from "@/lib/logger";
-import { sendEmail } from "@/send-email";
+import { sendFailureEmail } from "@/service/send-email";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
@@ -13,10 +13,8 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    await sendEmail({
-      subject: "Payment failed",
-      text: `Payment failed for subscription ${id}`,
-    });
+    await sendFailureEmail(id);
+
     logger.info(`Email sent in  route: failure for subscription ${id}`);
 
     return NextResponse.json({ message: "Subscription updated" });
