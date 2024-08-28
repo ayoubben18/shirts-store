@@ -1,7 +1,13 @@
 import { SubscriptionPlan, Subscriptions } from "@/types/tableTypes";
 import React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import PayPalCheckout from "./PaypalCheckout";
 import { PaypalProvider } from "@/providers/PaypalProvider";
+import { useShirtStore } from "@/stores/useShirtsStore";
 
 interface Props {
   data: Subscriptions;
@@ -40,6 +47,7 @@ const getAmountOfMonths = (plan: SubscriptionPlan) => {
 };
 
 const OrderSummary = ({ data }: Props) => {
+  const { shirts } = useShirtStore();
   return (
     <div className="mx-auto max-w-md rounded-lg bg-primary/5 p-6">
       <h1 className="mb-6 text-center text-3xl font-bold">
@@ -49,6 +57,20 @@ const OrderSummary = ({ data }: Props) => {
       <Card>
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
+          {data.connections === "10" && (
+            <CardDescription>
+              <ul className="flex flex-col gap-2">
+                {shirts.map((shirt) => (
+                  <li key={shirt.id} className="flex flex-col">
+                    <span>{shirt.name}</span>
+                    <span>
+                      {shirt.price}$ x {shirt.quantity}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardDescription>
+          )}
         </CardHeader>
         <CardContent>
           <Table>

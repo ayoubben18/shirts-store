@@ -7,8 +7,12 @@ import { Skeleton } from "../ui/skeleton";
 import SuccessCard from "./SuccessCard";
 import { useShirtStore } from "@/stores/useShirtsStore";
 import { nanoid } from "nanoid";
+import Ronotv from "../checkout/Ronotv";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function PayementSuccessfulComp() {
+  const router = useRouter();
   const [id] = useQueryState("id");
   const { data, isLoading } = useQuery({
     queryKey: ["checkout"],
@@ -23,13 +27,14 @@ export default function PayementSuccessfulComp() {
 
   if (data) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="flex w-full flex-col items-center gap-7 p-4">
+        <Ronotv finish />
         <SuccessCard data={data} />
       </div>
     );
   } else if (shirts.length > 0) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="flex items-center p-4">
         <SuccessCard
           data={{
             id: nanoid(),
@@ -54,6 +59,7 @@ export default function PayementSuccessfulComp() {
       </div>
     );
   } else {
-    return <div>No Order found</div>;
+    toast.error("You should create an order first!");
+    router.push("/");
   }
 }

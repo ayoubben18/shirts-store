@@ -1,7 +1,10 @@
+"use client";
 import { Subscriptions } from "@/types/tableTypes";
 import { CheckCircle, Download, Home, Mail } from "lucide-react";
 import { format } from "date-fns";
-import React from "react";
+import React, { useRef } from "react";
+import generatePDF, { Resolution, Margin, Options } from "react-to-pdf";
+
 import {
   Card,
   CardHeader,
@@ -13,14 +16,50 @@ import {
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useShirtStore } from "@/stores/useShirtsStore";
+import { useQuery } from "@tanstack/react-query";
+import { getDevices } from "@/db/data/devices-data";
+import Receipt from "./Receipt";
 
 type Props = {
   data: Subscriptions;
 };
 
 const SuccessCard = ({ data }: Props) => {
+  const options: Options = {
+    filename: `receipt-${data.order_number}.pdf`,
+    method: "save",
+
+    resolution: Resolution.LOW,
+    page: {
+      margin: Margin.SMALL,
+      orientation: "portrait",
+    },
+    canvas: {
+      mimeType: "image/png",
+      qualityRatio: 1,
+    },
+
+    overrides: {
+      pdf: {
+        compress: true,
+      },
+      canvas: {
+        useCORS: true,
+        scale: 1.8,
+      },
+    },
+  };
   const { clearShirts, clearUser } = useShirtStore();
   const router = useRouter();
+  const { data: devices, isLoading } = useQuery({
+    queryKey: ["devices"],
+    queryFn: () => getDevices(data.id),
+    retry: true,
+    enabled: data.connections !== "10",
+  });
+  console.log({ devices, data });
+  const targetRef = useRef<HTMLDivElement>(null);
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
@@ -58,9 +97,7 @@ const SuccessCard = ({ data }: Props) => {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2">
-        <Button className="w-full">
-          <Download className="mr-2 h-4 w-4" /> Download Receipt
-        </Button>
+        {" "}
         <Button
           variant="outline"
           className="w-full"
@@ -74,6 +111,20 @@ const SuccessCard = ({ data }: Props) => {
         >
           <Home className="mr-2 h-4 w-4" /> Return to Homepage
         </Button>
+        {data.connections !== "10" && (
+          <div className="flex w-full flex-col gap-2">
+            <Button
+              className="w-full"
+              disabled={isLoading}
+              onClick={() => generatePDF(targetRef, options)}
+            >
+              <Download className="mr-2 h-4 w-4" /> Download Receipt
+            </Button>
+            <div ref={targetRef} className="w-full">
+              <Receipt {...data} devices={devices ? devices : []} />
+            </div>
+          </div>
+        )}
         <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>If you have any questions, please contact our support team.</p>
           <a

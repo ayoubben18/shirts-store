@@ -1,16 +1,8 @@
-"use client";
-import { ShirtsCard } from "@/components/landing-page/PaginatedCards";
-import PageWrapper from "@/components/PageWrapper";
-import { shirts } from "@/constants/shirts";
-import { notFound } from "next/navigation";
-function page({ params }: { params: { id: string } }) {
-  const shirt = shirts.find((shirt) => shirt.id === parseInt(params.id));
-  if (!shirt) return notFound();
-  return (
-    <PageWrapper>
-      <ShirtsCard {...shirt} />
-    </PageWrapper>
-  );
-}
+import Shirts from "@/components/Shirts";
+import React from "react";
+
+const page = ({ params }: { params: { id: string } }) => {
+  return <Shirts id={params.id} />;
+};
 
 export default page;

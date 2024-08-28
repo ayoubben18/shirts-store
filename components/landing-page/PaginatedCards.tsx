@@ -9,7 +9,7 @@ import Link from "next/link";
 
 const PaginatedCards = () => {
   return (
-    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-12 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-12 sm:grid-cols-3 xl:grid-cols-5">
       {shirts.map((shirt, index) => {
         return <ShirtsCard key={index} {...shirt} />;
       })}
@@ -21,14 +21,14 @@ export const ShirtsCard = ({ id, name, description, price, image }: Shirt) => {
   const router = useRouter();
   const handleClick = () => {
     if (isInCart) {
-      removeShirt({ id, name, description, price, image });
+      removeShirt(id);
     } else {
-      addShirt({ id, name, description, price, image });
+      addShirt(id, 1);
     }
   };
 
   const handleBuyNow = () => {
-    addShirt({ id, name, description, price, image });
+    addShirt(id, 1);
     router.push(`/informations`);
   };
 

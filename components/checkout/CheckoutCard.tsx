@@ -7,22 +7,36 @@ import { Skeleton } from "../ui/skeleton";
 import { useShirtStore } from "@/stores/useShirtsStore";
 import OrderSummary from "./OrderSummary";
 import { nanoid } from "nanoid";
+import Ronotv from "./Ronotv";
+import { StatusEnum } from "@/types/tableTypes";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CheckoutCard = () => {
+  const router = useRouter();
   const [id] = useQueryState("id");
   const { data, isLoading } = useQuery({
     queryKey: ["checkout"],
     queryFn: () => getOrderById(id!),
     enabled: !!id,
   });
-  const { shirts, user } = useShirtStore();
+  const { shirts, user, totalPrice } = useShirtStore();
 
   if (isLoading) {
     return <Skeleton className="h-40 w-full" />;
   }
 
   if (data) {
-    return <OrderSummary data={data} />;
+    if (data.status !== StatusEnum.Draft) {
+      router.push(`/success?id=${data.id}`);
+    } else {
+      return (
+        <div className="flex flex-col items-center gap-7">
+          <Ronotv finish={false} />
+          <OrderSummary data={data} />
+        </div>
+      );
+    }
   } else if (shirts.length > 0) {
     return (
       <OrderSummary
@@ -36,9 +50,7 @@ const CheckoutCard = () => {
           //@ts-ignore
           payement_phone: "+6567",
           order_number: Math.floor(Math.random() * 1000000) + 1,
-          price:
-            shirts.reduce((acc, curr) => acc + Number(curr.price), 0) +
-            (user.quickDelivery ? 1.99 : 0),
+          price: Number(totalPrice.toFixed(2)),
           plan: "monthly",
           connections: "10",
           adult_content: false,
@@ -47,9 +59,10 @@ const CheckoutCard = () => {
         }}
       />
     );
+  } else {
+    toast.error("No shirts in cart");
+    router.push("/");
   }
-
-  return <h1>No order found</h1>;
 };
 
 export default CheckoutCard;
