@@ -1,18 +1,6 @@
 import pino from "pino";
-import { ServerEnv } from "./env-server";
+import pretty from "pino-pretty";
 
-const transport = pino.transport({
-  targets: [
-    {
-      target: "pino-pretty",
-    },
-    {
-      target: "@logtail/pino",
-      options: { sourceToken: ServerEnv.LOGTAIL_SOURCE_TOKEN },
-    },
-  ],
-});
-
-const logger = pino(transport);
+const logger = pino(pretty());
 
 export default logger;
