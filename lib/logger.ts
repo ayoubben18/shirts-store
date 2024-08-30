@@ -1,13 +1,18 @@
-import { log, Logger } from "@logtail/next";
 import pino from "pino";
-import pinoPretty from "pino-pretty";
+import { ServerEnv } from "./env-server";
 
-let logger: pino.Logger | Logger;
+const transport = pino.transport({
+  targets: [
+    {
+      target: "pino-pretty",
+    },
+    {
+      target: "@logtail/pino",
+      options: { sourceToken: ServerEnv.LOGTAIL_SOURCE_TOKEN },
+    },
+  ],
+});
 
-if (process.env.NODE_ENV === "development") {
-  logger = pino(pinoPretty());
-} else {
-  logger = log;
-}
+const logger = pino(transport);
 
 export default logger;

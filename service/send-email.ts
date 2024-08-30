@@ -32,7 +32,7 @@ const sendFailureEmail = async (id: string) => {
     html: await emailHtml,
   });
 
-  logger.info("Email sent", { info, id });
+  logger.info({ info, id }, "Email sent");
   return info;
 };
 

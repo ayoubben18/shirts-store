@@ -41,14 +41,14 @@ export async function POST(request: Request) {
     try {
       await updateSubscription(id, updateObject).then(() => {
         logger.info(
+          { response, id, updateObject },
           `Capture order response order_id:${updateObject.payement_order_id}, id:${id}`,
-          { response, id },
         );
       });
     } catch (error) {
       logger.warn(
-        "Error updating subscription in database, switching to qstash:",
         { error, id, updateObject },
+        "Error updating subscription in database, switching to qstash:",
       );
       await qstash.publish({
         retries: 6,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ orderID: response.result.id });
   } catch (error: any) {
-    logger.error("Error capturing order:", { error });
+    logger.error({ error, body }, "Error capturing order:");
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }

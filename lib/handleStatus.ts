@@ -26,7 +26,7 @@ export const handleStatus = <T>(
     case 404:
       return null;
     default:
-      logger.error(CustomErrorEnums.DatabaseError, { error });
+      logger.error({ error }, CustomErrorEnums.DatabaseError);
 
       throw new CustomError(
         error!.message,

@@ -81,7 +81,6 @@ export default function PayPalCheckout({
             tagline: false,
             color: "silver",
           }}
-          forceReRender={[id, mock, price]}
           createOrder={createOrder}
           onApprove={onApprove}
           onCancel={() => {

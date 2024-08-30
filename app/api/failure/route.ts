@@ -15,11 +15,11 @@ export const POST = async (req: NextRequest) => {
 
     await sendFailureEmail(id);
 
-    logger.info(`Email sent in  route: failure for subscription ${id}`);
+    logger.info({ id }, `Email sent in  route: failure for subscription ${id}`);
 
     return NextResponse.json({ message: "Subscription updated" });
   } catch (error) {
-    logger.error("Error sending in route: failure email", { error });
+    logger.error({ error }, "Error sending in route: failure email");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
