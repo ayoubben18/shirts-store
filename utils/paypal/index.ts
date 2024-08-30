@@ -1,7 +1,7 @@
 import { ServerEnv } from "@/lib/env-server";
 import paypal from "@paypal/checkout-server-sdk";
 
-const envirenement = new paypal.core.SandboxEnvironment(
+const envirenement = new paypal.core.LiveEnvironment(
   ServerEnv.PAYPAL_CLIENT_ID,
   ServerEnv.PAYPAL_CLIENT_SECRET,
 );
