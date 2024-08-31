@@ -8,7 +8,10 @@ export function PaypalProvider({ children }: { children: ReactNode }) {
   return (
     <PayPalScriptProvider
       options={{
-        clientId: ClientEnv.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+        clientId:
+          process.env.NODE_ENV === "development"
+            ? ClientEnv.NEXT_PUBLIC_PAYPAL_SANDBOX_ID
+            : ClientEnv.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
       }}
     >
       {children}

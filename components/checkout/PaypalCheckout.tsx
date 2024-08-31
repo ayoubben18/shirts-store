@@ -4,6 +4,8 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
+import { useQueryClient } from "@tanstack/react-query";
+import confetti from "canvas-confetti";
 interface PayPalCheckoutProps {
   price: string;
   id: string;
@@ -17,6 +19,36 @@ export default function PayPalCheckout({
 }: PayPalCheckoutProps) {
   const [{ isPending }] = usePayPalScriptReducer();
   const { push } = useRouter();
+  const queryClient = useQueryClient();
+
+  const handleClick = () => {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    const randomInRange = (min: number, max: number) =>
+      Math.random() * (max - min) + min;
+
+    const interval = window.setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+  };
 
   const createOrder = async () => {
     const reqBodyJson = {
@@ -59,6 +91,8 @@ export default function PayPalCheckout({
     const orderData = await response.json();
     if (response.ok) {
       toast.success("Payment successful!");
+      handleClick();
+      queryClient.invalidateQueries({ queryKey: ["checkout"] });
       push(mock ? `/success` : `/success?id=${id}`);
     } else {
       throw new Error(orderData.error || "Failed to capture order");
@@ -72,7 +106,7 @@ export default function PayPalCheckout({
         <Skeleton className="h-40 w-full" />
       ) : (
         <PayPalButtons
-          className="z-0 w-full"
+          className="relative z-0 w-full"
           style={{
             layout: "vertical",
             shape: "rect",
