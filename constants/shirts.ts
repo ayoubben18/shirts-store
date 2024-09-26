@@ -50,6 +50,7 @@ export const shirts: Shirt[] = [
     description:
       "Seven vibrant t-shirts inspired by the colors of the rainbow.",
     image: "/3.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Set of 7 shirts",
       "Bright, bold colors",
@@ -67,6 +68,7 @@ export const shirts: Shirt[] = [
     description:
       "A versatile set of ten t-shirts in classic black and white shades.",
     image: "/4.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Set of 10 shirts",
       "5 black, 5 white",
@@ -84,7 +86,7 @@ export const shirts: Shirt[] = [
     description:
       "A dreamy assortment of t-shirts in soft, soothing pastel hues.",
     image: "/5.png",
-    categories: ["WOMEN"],
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Assorted pastel colors",
       "Lightweight fabric",
@@ -101,6 +103,7 @@ export const shirts: Shirt[] = [
     price: "43.99",
     description: "A curated selection of t-shirts in warm, earthy colors.",
     image: "/6.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Natural color palette",
       "Organic cotton options",
@@ -136,6 +139,7 @@ export const shirts: Shirt[] = [
     description:
       "Express yourself with this diverse set of graphic print t-shirts.",
     image: "/8.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Unique graphic designs",
       "Artist collaborations",
@@ -153,6 +157,7 @@ export const shirts: Shirt[] = [
     description:
       "Add a splash of color to your wardrobe with these vibrant tie-dye t-shirts.",
     image: "/9.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Hand-dyed",
       "One-of-a-kind patterns",
@@ -170,6 +175,7 @@ export const shirts: Shirt[] = [
     description:
       "Channel nautical vibes with this collection of classic striped t-shirts.",
     image: "/10.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Horizontal stripe patterns",
       "Navy and white color schemes",
@@ -187,6 +193,7 @@ export const shirts: Shirt[] = [
     description:
       "Embrace simplicity with this set of sleek, monochromatic t-shirts.",
     image: "/11.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Solid colors",
       "Clean, modern design",
@@ -204,6 +211,7 @@ export const shirts: Shirt[] = [
     description:
       "Create authentic vintage-inspired band t-shirts with this comprehensive guide.",
     image: "/12.png",
+    categories: ["WOMEN", "MEN", "KIDS"],
     details: [
       "Band logo design principles",
       "Screen printing techniques",

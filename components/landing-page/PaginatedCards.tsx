@@ -1,19 +1,40 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Shirt, shirts } from "@/constants/shirts";
+import { Shirt, shirts as shirtsData } from "@/constants/shirts";
 import { Language, useShirtStore } from "@/stores/useShirtsStore";
 import Link from "next/link";
+import { Input } from "../ui/input";
+import { SearchIcon } from "lucide-react";
 
 const PaginatedCards = () => {
+  const [shirts, setShirts] = useState(shirtsData);
+
   return (
-    <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-12 sm:grid-cols-3 xl:grid-cols-5">
-      {shirts.map((shirt, index) => {
-        return <ShirtsCard key={index} {...shirt} />;
-      })}
-    </div>
+    <>
+      <div className="relative w-full">
+        <SearchIcon className="absolute left-2 top-5 size-4 -translate-y-1/2 transform" />
+        <Input
+          className="w-full pl-7"
+          type="text"
+          placeholder="Search"
+          onChange={(e) =>
+            setShirts(
+              shirtsData.filter((shirt) =>
+                shirt.name.toLowerCase().includes(e.target.value),
+              ),
+            )
+          }
+        />
+      </div>
+      <div className="mx-auto grid grid-cols-1 gap-6 px-4 py-12 sm:grid-cols-3 xl:grid-cols-5">
+        {shirts.map((shirt, index) => {
+          return <ShirtsCard key={index} {...shirt} />;
+        })}
+      </div>
+    </>
   );
 };
 
@@ -62,7 +83,7 @@ export const ShirtsCard = ({ id, name, description, price, image }: Shirt) => {
             onClick={handleClick}
             className="w-full"
           >
-            {isInCart ? "Remove" : "Add to Cart"}
+            {isInCart ? "Remove from cart" : "Add to cart"}
           </Button>
         </div>
       </div>
