@@ -37,7 +37,12 @@ export default function RootLayout({
             defaultTheme="dark"
             disableTransitionOnChange
           >
-            <Toaster richColors position="top-center" theme="dark" />
+            <Toaster
+              richColors
+              position="top-center"
+              theme="dark"
+              visibleToasts={1}
+            />
             <NavBar />
             {children}
             <Footer />

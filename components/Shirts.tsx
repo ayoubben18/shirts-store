@@ -25,19 +25,26 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { toast } from "sonner";
 
 function Shirts({ id }: { id: string }) {
   const shirt = DataShirts.find((shirt) => shirt.id === Number(id));
   const [language, setLanguage] = useState<Language>(Language.EN);
   const { shirts, addShirt, removeShirt } = useShirtStore();
-  const shirtInCart = useMemo(
-    () => shirts.find((s) => s.id === shirt?.id),
+  const shirtsInCart = useMemo(
+    () => shirts.filter((s) => s.id === shirt?.id),
     [shirts, shirt?.id],
   );
   if (!shirt) return notFound();
 
   const handleAddToCart = () => {
     addShirt(shirt.id, language);
+    toast.success(`Shirt added to cart - ${language}`, {
+      action: {
+        label: "Undo",
+        onClick: removeFromCart,
+      },
+    });
   };
 
   const removeFromCart = () => {
@@ -85,26 +92,6 @@ function Shirts({ id }: { id: string }) {
                 </div>
               </div>
               <div className="space-y-4">
-                <p className={cn(shirtInCart && "text-green-500")}>
-                  {shirtInCart && (
-                    <div className="flex items-center space-x-2">
-                      <span>
-                        You the{" "}
-                        {shirts
-                          .filter((s) => s.id === shirt.id)
-                          .map((shirt) => shirt.language)
-                          .join(", ")}
-                      </span>
-                      <Button
-                        variant={"link"}
-                        className="text-red-500"
-                        onClick={removeFromCart}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  )}
-                </p>
                 <p className="mb-6 text-2xl font-semibold">${shirt.price}</p>
 
                 <div className="flex items-center space-x-2">
@@ -122,7 +109,11 @@ function Shirts({ id }: { id: string }) {
                     </TabsList>
                   </Tabs>
                 </div>
-                <Button className="w-full" onClick={handleAddToCart}>
+                <Button
+                  className="w-full"
+                  onClick={handleAddToCart}
+                  disabled={shirtsInCart.length === 2}
+                >
                   <ShoppingCartIcon className="mr-2 h-4 w-4" /> Add to Cart
                 </Button>
               </div>

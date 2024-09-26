@@ -3,10 +3,12 @@ import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
+import { useShirtStore } from "@/stores/useShirtsStore";
+import BasketShirts from "./BasketShirts";
 
 const NavBar = () => {
-  const router = useRouter();
   const pathname = usePathname();
+  const { shirts } = useShirtStore();
 
   const inCheckout =
     pathname.startsWith("/checkout") || pathname.startsWith("/success");
@@ -18,12 +20,8 @@ const NavBar = () => {
           <HomeIcon className={`${inCheckout && "hidden"} h-8 w-8`} />
         </Link>
       </div>
-      <Button
-        onClick={() => router.push("/informations")}
-        className={`${inCheckout && "hidden"}`}
-      >
-        Checkout
-      </Button>
+
+      <BasketShirts />
     </div>
   );
 };
