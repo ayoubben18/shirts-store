@@ -49,7 +49,7 @@ const SuccessCard = ({ data }: Props) => {
       },
     },
   };
-  const { clearShirts, clearUser } = useShirtStore();
+  const { clearUser, resetNanoId } = useShirtStore();
   const router = useRouter();
   const { data: devices, isLoading } = useQuery({
     queryKey: ["devices"],
@@ -70,8 +70,8 @@ const SuccessCard = ({ data }: Props) => {
           Payment Successful!
         </CardTitle>
         <CardDescription>
-          Thank you for your purchase. Your order has been processed
-          successfully.
+          Thank you for your purchase. Your order has been payed successfully.
+          We will contact you soon.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -102,11 +102,11 @@ const SuccessCard = ({ data }: Props) => {
           variant="outline"
           className="w-full"
           onClick={() => {
-            clearUser();
-            clearShirts();
             router.push(
               data.connections === "10" ? "/" : "https://www.ronotv.com",
             );
+            clearUser();
+            resetNanoId();
           }}
         >
           <Home className="mr-2 h-4 w-4" /> Return to Homepage
@@ -133,7 +133,7 @@ const SuccessCard = ({ data }: Props) => {
           >
             <Mail className="mr-1 h-4 w-4" />{" "}
             {data.connections === "10"
-              ? "contact@ronotv.shop"
+              ? "contact@patterncrafteronline.com"
               : "contact@ronotv.com"}
           </a>
         </div>

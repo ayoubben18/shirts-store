@@ -10,6 +10,7 @@ import { nanoid } from "nanoid";
 import Ronotv from "../checkout/Ronotv";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getBookShirtById } from "@/db/services/redis-service";
 
 export default function PayementSuccessfulComp() {
   const router = useRouter();
@@ -19,9 +20,15 @@ export default function PayementSuccessfulComp() {
     queryFn: () => getOrderById(id!),
     enabled: !!id,
   });
-  const { shirts, user } = useShirtStore();
 
-  if (isLoading) {
+  const { shirts, user, nanoId } = useShirtStore();
+  const { data: bookShirt, isLoading: isBookShirtLoading } = useQuery({
+    queryKey: ["book-shirt"],
+    queryFn: () => getBookShirtById(nanoId),
+    enabled: !id,
+  });
+
+  if (isLoading || isBookShirtLoading) {
     return <Skeleton className="h-40 max-w-96" />;
   }
 
@@ -45,7 +52,7 @@ export default function PayementSuccessfulComp() {
             payement_order_id: "1234567890",
             //@ts-ignore
             payement_phone: "+6567",
-            order_number: Math.floor(Math.random() * 1000000) + 1,
+            order_number: nanoId,
             price:
               shirts.reduce((acc, curr) => acc + Number(curr.price), 0) +
               (user.quickDelivery ? 1.99 : 0),
