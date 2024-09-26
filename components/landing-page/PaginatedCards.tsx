@@ -51,21 +51,19 @@ export const ShirtsCard = ({ id, name, description, price, image }: Shirt) => {
         <h3 className="mt-5 text-center text-lg font-semibold">{name}</h3>
       </Link>
       <div className="flex h-full flex-col justify-end space-y-2 p-4">
-        <p className="text-sm text-muted-foreground">{description}</p>
-        <div className="flex flex-col items-start justify-between gap-2">
+        <p className="text-center text-sm text-muted-foreground">
+          {description}
+        </p>
+        <div className="flex flex-col items-center gap-2">
           <span className="text-2xl font-bold">${price}</span>
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant={isInCart ? "destructive" : "outline"}
-              onClick={handleClick}
-            >
-              {isInCart ? "Remove" : "Add to Cart"}
-            </Button>
-            <Button size="sm" onClick={handleBuyNow}>
-              Buy Now
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            variant={isInCart ? "destructive" : "outline"}
+            onClick={handleClick}
+            className="w-full"
+          >
+            {isInCart ? "Remove" : "Add to Cart"}
+          </Button>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ export interface Shirt {
   description: string;
   image: string;
   details: string[];
+  categories?: string[];
 }
 
 export const shirts: Shirt[] = [
@@ -14,7 +15,8 @@ export const shirts: Shirt[] = [
     price: "11.99",
     description:
       "Learn to create the perfect white t-shirt with this comprehensive guide.",
-    image: "/1.jpg",
+    image: "/1.png",
+    categories: ["WOMEN", "KIDS"],
     details: [
       "Step-by-step instructions",
       "Fabric selection tips",
@@ -30,7 +32,8 @@ export const shirts: Shirt[] = [
     price: "24.99",
     description:
       "Master the art of crafting vintage-inspired blue t-shirts with this detailed manual.",
-    image: "/2.jpg",
+    image: "/2.png",
+    categories: ["WOMEN", "KIDS"],
     details: [
       "Dyeing techniques for various blue shades",
       "Distressing and aging methods",
@@ -46,7 +49,7 @@ export const shirts: Shirt[] = [
     price: "39.99",
     description:
       "Seven vibrant t-shirts inspired by the colors of the rainbow.",
-    image: "/3.jpg",
+    image: "/3.png",
     details: [
       "Set of 7 shirts",
       "Bright, bold colors",
@@ -63,7 +66,7 @@ export const shirts: Shirt[] = [
     price: "59.99",
     description:
       "A versatile set of ten t-shirts in classic black and white shades.",
-    image: "/4.jpg",
+    image: "/4.png",
     details: [
       "Set of 10 shirts",
       "5 black, 5 white",
@@ -80,7 +83,8 @@ export const shirts: Shirt[] = [
     price: "19.99",
     description:
       "A dreamy assortment of t-shirts in soft, soothing pastel hues.",
-    image: "/5.jpg",
+    image: "/5.png",
+    categories: ["WOMEN"],
     details: [
       "Assorted pastel colors",
       "Lightweight fabric",
@@ -96,7 +100,7 @@ export const shirts: Shirt[] = [
     name: "Earth Tones Bundle",
     price: "43.99",
     description: "A curated selection of t-shirts in warm, earthy colors.",
-    image: "/6.jpg",
+    image: "/6.png",
     details: [
       "Natural color palette",
       "Organic cotton options",
@@ -113,7 +117,8 @@ export const shirts: Shirt[] = [
     price: "69.99",
     description:
       "Make a statement with this bold collection of neon-colored t-shirts.",
-    image: "/7.jpg",
+    image: "/7.png",
+    categories: ["WOMEN", "ADULTS"],
     details: [
       "Ultra-bright neon colors",
       "Glow-in-the-dark options",
@@ -130,7 +135,7 @@ export const shirts: Shirt[] = [
     price: "99.99",
     description:
       "Express yourself with this diverse set of graphic print t-shirts.",
-    image: "/8.jpg",
+    image: "/8.png",
     details: [
       "Unique graphic designs",
       "Artist collaborations",
@@ -147,7 +152,7 @@ export const shirts: Shirt[] = [
     price: "28.99",
     description:
       "Add a splash of color to your wardrobe with these vibrant tie-dye t-shirts.",
-    image: "/9.jpg",
+    image: "/9.png",
     details: [
       "Hand-dyed",
       "One-of-a-kind patterns",
@@ -164,7 +169,7 @@ export const shirts: Shirt[] = [
     price: "58.99",
     description:
       "Channel nautical vibes with this collection of classic striped t-shirts.",
-    image: "/10.jpg",
+    image: "/10.png",
     details: [
       "Horizontal stripe patterns",
       "Navy and white color schemes",
@@ -181,7 +186,7 @@ export const shirts: Shirt[] = [
     price: "98.99",
     description:
       "Embrace simplicity with this set of sleek, monochromatic t-shirts.",
-    image: "/11.jpg",
+    image: "/11.png",
     details: [
       "Solid colors",
       "Clean, modern design",
@@ -198,7 +203,7 @@ export const shirts: Shirt[] = [
     price: "129.99",
     description:
       "Create authentic vintage-inspired band t-shirts with this comprehensive guide.",
-    image: "/12.jpg",
+    image: "/12.png",
     details: [
       "Band logo design principles",
       "Screen printing techniques",

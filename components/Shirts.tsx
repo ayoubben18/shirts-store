@@ -88,7 +88,9 @@ function Shirts({ id }: { id: string }) {
                 </div>
                 <div className="mb-6">
                   <span className="text-sm font-medium">Category: </span>
-                  <span className="text-sm font-bold text-green-500">MEN</span>
+                  <span className="text-sm font-bold text-green-500">
+                    {shirt.categories?.join(", ") || "N/A"}
+                  </span>
                 </div>
               </div>
               <div className="space-y-4">
