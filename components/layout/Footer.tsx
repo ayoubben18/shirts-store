@@ -13,63 +13,63 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { Separator } from "../ui/separator";
-
+import Image from "next/image";
 const footerMenuItems = [
   {
     title: "Company",
-    items: [{ name: "Collections", link: "/#head" }],
+    items: [{ name: "Ebook Collections", link: "/#collections" }],
   },
   {
     title: "Customer Care",
     items: [
       {
-        name: "Returns & Exchanges",
+        name: "Returns & Refunds",
         content: {
-          title: "Returns & Exchanges Policy",
+          title: "Returns & Refunds Policy",
           description: [
             {
-              title: "30-Day Return Policy",
-              text: "We offer a 30-day return policy for all unworn, unwashed t-shirts with original tags attached. Customer is responsible for return shipping costs unless the item is defective.",
+              title: "14-Day Refund Policy",
+              text: "We offer a 14-day refund policy for all ebook purchases. If you're unsatisfied with your ebook, please contact our customer service team for assistance.",
             },
             {
-              title: "Exchange Process",
-              text: "To exchange a t-shirt for a different size or color, please initiate the return process and place a new order for the desired item. We'll process your refund once we receive the original item.",
+              title: "Refund Process",
+              text: "To request a refund, please email us with your order number and reason for the refund. We'll review your request and process it within 3-5 business days.",
             },
             {
               title: "Refund Timeline",
-              text: "Refunds are typically processed within 5-7 business days after we receive your return. The amount will be credited back to the original payment method used for the purchase.",
+              text: "Refunds are typically processed within 5-7 business days after approval. The amount will be credited back to the original payment method used for the purchase.",
             },
           ],
         },
       },
       {
-        name: "Shipping Information",
+        name: "Download Information",
         content: {
-          title: "Shipping Information",
+          title: "Download Information",
           description: [
             {
-              title: "Domestic Shipping",
-              text: "We offer free standard shipping on all orders over $50. Orders typically arrive within 3-5 business days. Expedited shipping options are available at checkout for an additional fee.",
+              title: "Instant Download",
+              text: "After your order is processed, you'll receive an email containing your ebook(s). Please allow a short processing time before the delivery email arrives.",
             },
             {
-              title: "International Shipping",
-              text: "We ship to select countries worldwide. International shipping rates and delivery times vary based on destination. Please note that customers are responsible for any import duties or taxes.",
+              title: "Compatible Devices",
+              text: "Our ebooks are available in PDF format, compatible with most e-readers, tablets, smartphones, and computers. For the best experience, we recommend using Adobe Acrobat Reader.",
             },
           ],
         },
       },
       {
-        name: "Size Guide",
+        name: "Ebook Guide",
         content: {
-          title: "T-Shirt Size Guide",
+          title: "Ebook Content Guide",
           description: [
             {
-              title: "Measurements",
-              text: "Our size guide provides detailed measurements for chest width, body length, and sleeve length for each size from XS to XXL. Please refer to this guide to ensure the best fit.",
+              title: "Skill Levels",
+              text: "Our ebooks cater to various skill levels, from beginner to advanced. Each ebook description includes the recommended skill level to help you choose the right guide for your needs.",
             },
             {
-              title: "Fit Recommendations",
-              text: "Our t-shirts are designed for a comfortable, regular fit. If you prefer a looser fit, we recommend sizing up. For a more fitted look, consider sizing down.",
+              title: "Content Overview",
+              text: "Each ebook includes detailed instructions, high-quality images, printable patterns, and tips for successful garment creation. Some advanced guides may also include video tutorials accessible via QR codes.",
             },
           ],
         },
@@ -84,12 +84,20 @@ const Footer = () => {
       <Separator />
       <div className="container mx-auto">
         <div className="mt-7 flex items-center justify-between">
-          <h1 className="text-2xl font-black">RONOTV SHOP</h1>
+          <div className="relative aspect-video">
+            <Image
+              src="/logo.png"
+              width={100}
+              height={100}
+              alt="Pattern Crafter Online"
+              className="w-full object-cover"
+            />
+          </div>
           <div className="flex gap-6">
-            <Link href="tel:+1234567890" aria-label="Call us">
-              <Phone className="h-6 w-6" />
-            </Link>
-            <Link href="mailto:order@ronotv.shop" aria-label="Email us">
+            <Link
+              href="mailto:contact@patterncrafteronline.com"
+              aria-label="Email us"
+            >
               <Mail className="h-6 w-6" />
             </Link>
           </div>
