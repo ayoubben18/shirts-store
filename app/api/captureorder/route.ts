@@ -24,8 +24,10 @@ export async function POST(request: Request) {
     if (response.statusCode !== 201 || !response.result) {
       throw new Error("Failed to capture order");
     }
+    logger.info({ response }, "Capture order response");
 
     if (mock) {
+      // TODO : send email to user using patterncrafteronline.com
       return NextResponse.json({ orderID: response.result.id });
     }
 

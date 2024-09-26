@@ -17,4 +17,10 @@ const setBookShirtById = async (id: number, data: any) => {
   await redis.set(cacheKey, data);
 };
 
-export { getBookShirtById, setBookShirtById };
+const setBookPaid = async (id: number, data: any) => {
+  const cacheKey = `book-shirt-${id}:paid`;
+
+  await redis.set(cacheKey, data);
+};
+
+export { getBookShirtById, setBookShirtById, setBookPaid };

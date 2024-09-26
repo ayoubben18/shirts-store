@@ -4,8 +4,11 @@ import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import confetti from "canvas-confetti";
+import { shirts } from "@/constants/shirts";
+import { setBookPaid } from "@/db/services/redis-service";
+import { useShirtStore } from "@/stores/useShirtsStore";
 interface PayPalCheckoutProps {
   price: string;
   id: string;
@@ -20,6 +23,7 @@ export default function PayPalCheckout({
   const [{ isPending }] = usePayPalScriptReducer();
   const { push } = useRouter();
   const queryClient = useQueryClient();
+  const { shirts: shirtsStore, nanoId, user } = useShirtStore();
 
   const handleClick = () => {
     const duration = 5 * 1000;
@@ -50,10 +54,21 @@ export default function PayPalCheckout({
     }, 250);
   };
 
+  const { mutate } = useMutation({
+    mutationFn: () =>
+      setBookPaid(nanoId, { user, shirts: shirtsStore, time: new Date() }),
+  });
+
   const createOrder = async () => {
     const reqBodyJson = {
       id: id,
       price: price,
+      products: shirts
+        .filter((shirt) => shirt.price === price)
+        .map((shirt) => ({
+          name: shirt.name,
+          price: price,
+        })),
     };
     const response = await fetch("/api/createorder", {
       method: "POST",
@@ -92,6 +107,7 @@ export default function PayPalCheckout({
     if (response.ok) {
       toast.success("Payment successful!");
       handleClick();
+      mock && mutate();
       queryClient.invalidateQueries({ queryKey: ["checkout"] });
       push(mock ? `/success` : `/success?id=${id}`);
     } else {

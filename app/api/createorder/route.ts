@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { price, id } = body;
+  const { price, id, products } = body;
   try {
     const paypalReq = new paypal.orders.OrdersCreateRequest();
     paypalReq.requestBody({
@@ -18,7 +18,52 @@ export async function POST(request: NextRequest) {
           amount: {
             currency_code: "USD",
             value: price,
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: price,
+              },
+              shipping: {
+                currency_code: "USD",
+                value: "0",
+              },
+              tax_total: {
+                currency_code: "USD",
+                value: "0",
+              },
+              discount: {
+                currency_code: "USD",
+                value: "0",
+              },
+              handling: {
+                currency_code: "USD",
+                value: "0",
+              },
+              insurance: {
+                currency_code: "USD",
+                value: "0",
+              },
+              shipping_discount: {
+                currency_code: "USD",
+                value: "0",
+              },
+            },
           },
+          items: products.map((product: { name: string; price: string }) => ({
+            name: product.name,
+            quantity: "1",
+            unit_amount: {
+              currency_code: "USD",
+              value: product.price,
+            },
+            category: "DIGITAL_GOODS",
+          })),
+          description:
+            products.join(", ") +
+            " - " +
+            price +
+            "$" +
+            "\ndigital products which means no shipping",
         },
       ],
     });
