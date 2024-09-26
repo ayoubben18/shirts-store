@@ -64,7 +64,7 @@ const OrderSummary = ({ data }: Props) => {
                   <li key={shirt.id} className="flex flex-col">
                     <span>{shirt.name}</span>
                     <span>
-                      {shirt.price}$ x {shirt.quantity}
+                      {shirt.price}$ - {shirt.language}
                     </span>
                   </li>
                 ))}

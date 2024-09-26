@@ -11,6 +11,7 @@ import Ronotv from "./Ronotv";
 import { StatusEnum } from "@/types/tableTypes";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { getBookShirtById } from "@/db/services/redis-service";
 
 const CheckoutCard = () => {
   const router = useRouter();
@@ -20,10 +21,16 @@ const CheckoutCard = () => {
     queryFn: () => getOrderById(id!),
     enabled: !!id,
   });
-  const { shirts, user, totalPrice } = useShirtStore();
 
-  if (isLoading) {
-    return <Skeleton className="h-40 w-full" />;
+  const { shirts, user, nanoId } = useShirtStore();
+
+  const { data: bookShirt, isLoading: isBookShirtLoading } = useQuery({
+    queryKey: ["book-shirt"],
+    queryFn: () => getBookShirtById(nanoId),
+    enabled: !id,
+  });
+  if (isLoading || isBookShirtLoading) {
+    return <Skeleton className="h-96 w-72" />;
   }
 
   if (data) {
@@ -37,7 +44,7 @@ const CheckoutCard = () => {
         </div>
       );
     }
-  } else if (shirts.length > 0) {
+  } else if (shirts.length > 0 || bookShirt) {
     return (
       <OrderSummary
         data={{
@@ -49,8 +56,12 @@ const CheckoutCard = () => {
           payement_order_id: "1234567890",
           //@ts-ignore
           payement_phone: "+6567",
-          order_number: Math.floor(Math.random() * 1000000) + 1,
-          price: Number(totalPrice.toFixed(2)),
+          order_number: nanoId,
+          price: Number(
+            shirts
+              .reduce((acc, shirt) => acc + Number(shirt.price), 0)
+              .toFixed(2),
+          ),
           plan: "monthly",
           connections: "10",
           adult_content: false,

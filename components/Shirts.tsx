@@ -11,9 +11,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { shirts as DataShirts } from "@/constants/shirts";
 import { cn } from "@/lib/utils";
-import { useShirtStore } from "@/stores/useShirtsStore";
+import { Language, useShirtStore } from "@/stores/useShirtsStore";
 import {
   CheckCircleIcon,
+  FileTextIcon,
   LockIcon,
   MinusIcon,
   PlusIcon,
@@ -23,28 +24,24 @@ import {
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useMemo, useState } from "react";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 
 function Shirts({ id }: { id: string }) {
   const shirt = DataShirts.find((shirt) => shirt.id === Number(id));
+  const [language, setLanguage] = useState<Language>(Language.EN);
   const { shirts, addShirt, removeShirt } = useShirtStore();
   const shirtInCart = useMemo(
     () => shirts.find((s) => s.id === shirt?.id),
     [shirts, shirt?.id],
   );
-  const [quantity, setQuantity] = useState(shirtInCart?.quantity || 1);
   if (!shirt) return notFound();
 
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () =>
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
   const handleAddToCart = () => {
-    addShirt(shirt.id, quantity);
+    addShirt(shirt.id, language);
   };
 
   const removeFromCart = () => {
-    removeShirt(shirt.id);
-    setQuantity(1);
+    removeShirt(shirt.id, language);
   };
 
   return (
@@ -57,7 +54,7 @@ function Shirts({ id }: { id: string }) {
                 src={shirt.image}
                 alt={shirt.name}
                 fill
-                className="rounded-lg"
+                className="h-full w-full rounded-lg object-cover"
               />
             </div>
             <div className="flex flex-col justify-between">
@@ -78,8 +75,8 @@ function Shirts({ id }: { id: string }) {
                     <span className="text-sm font-medium">100% GUARANTEED</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <TruckIcon className="h-5 w-5 text-green-500" />
-                    <span className="text-sm font-medium">FREE SHIPPING</span>
+                    <FileTextIcon className="h-5 w-5 text-green-500" />
+                    <span className="text-sm font-medium">PDF Content</span>
                   </div>
                 </div>
                 <div className="mb-6">
@@ -91,7 +88,13 @@ function Shirts({ id }: { id: string }) {
                 <p className={cn(shirtInCart && "text-green-500")}>
                   {shirtInCart && (
                     <div className="flex items-center space-x-2">
-                      <span>You already have this shirt in your cart</span>
+                      <span>
+                        You the{" "}
+                        {shirts
+                          .filter((s) => s.id === shirt.id)
+                          .map((shirt) => shirt.language)
+                          .join(", ")}
+                      </span>
                       <Button
                         variant={"link"}
                         className="text-red-500"
@@ -105,29 +108,19 @@ function Shirts({ id }: { id: string }) {
                 <p className="mb-6 text-2xl font-semibold">${shirt.price}</p>
 
                 <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={decrementQuantity}
+                  <Tabs
+                    value={language}
+                    onValueChange={(value) => setLanguage(value as Language)}
                   >
-                    <MinusIcon className="h-4 w-4" />
-                  </Button>
-                  <Input
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-                    }
-                    className="w-20 text-center"
-                  />
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={incrementQuantity}
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                  </Button>
+                    <TabsList className="grid grid-cols-2">
+                      <TabsTrigger value={Language.EN}>
+                        {Language.EN}
+                      </TabsTrigger>
+                      <TabsTrigger value={Language.AR}>
+                        {Language.AR}
+                      </TabsTrigger>
+                    </TabsList>
+                  </Tabs>
                 </div>
                 <Button className="w-full" onClick={handleAddToCart}>
                   <ShoppingCartIcon className="mr-2 h-4 w-4" /> Add to Cart

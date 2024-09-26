@@ -24,17 +24,22 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
+import { setBookShirtById } from "@/db/services/redis-service";
 
 const InfoCard = () => {
   const router = useRouter();
-  const { shirts, setUser, user } = useShirtStore();
+  const { shirts, setUser, user, nanoId } = useShirtStore();
   const form = useForm<z.infer<typeof userSchema>>({
     resolver: zodResolver(userSchema),
     defaultValues: user,
   });
-  const onSubmit = (values: z.infer<typeof userSchema>) => {
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => setBookShirtById(nanoId, { shirts, user }),
+  });
+  const onSubmit = async (values: z.infer<typeof userSchema>) => {
     setUser(values);
-
+    await mutateAsync();
     router.push("/checkout");
   };
   if (shirts.length === 0) {
@@ -106,7 +111,7 @@ const InfoCard = () => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="address"
               render={({ field }) => (
@@ -170,7 +175,7 @@ const InfoCard = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="quickDelivery"
@@ -200,6 +205,7 @@ const InfoCard = () => {
           type="submit"
           onClick={form.handleSubmit(onSubmit)}
           className="w-full"
+          disabled={isPending}
         >
           Proceed to checkout
         </Button>
