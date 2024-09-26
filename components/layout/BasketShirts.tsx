@@ -15,8 +15,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
+import { cn } from "@/lib/utils";
+interface Props {
+  hideBasket?: boolean;
+}
 
-const BasketShirts = () => {
+const BasketShirts = ({ hideBasket }: Props) => {
   const router = useRouter();
 
   const { shirts, removeShirt } = useShirtStore();
@@ -28,7 +32,9 @@ const BasketShirts = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="flex items-center gap-2">
+        <Button
+          className={cn("flex items-center gap-2", hideBasket && "hidden")}
+        >
           Cart <ShoppingBasket className="h-5 w-5" />
         </Button>
       </SheetTrigger>

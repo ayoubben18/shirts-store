@@ -23,7 +23,7 @@ const NavBar = () => {
           />
         </Link>
       </div>
-      <BasketShirts />
+      <BasketShirts hideBasket={inCheckout} />
     </div>
   );
 };
