@@ -37,7 +37,7 @@ export const ShirtsCard = ({ id, name, description, price, image }: Shirt) => {
   return (
     <div className="grid h-[500px] grid-rows-2 overflow-hidden rounded-lg border-2 border-secondary bg-card shadow-sm hover:shadow-lg">
       <Link href={`/shirt/${id}`}>
-        <div className="h-full">
+        <div className="h-full overflow-hidden">
           <Image
             priority
             src={image}

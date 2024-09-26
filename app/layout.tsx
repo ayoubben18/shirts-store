@@ -14,7 +14,7 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 export const metadata: Metadata = {
-  title: "Shirt Store",
+  title: "Pattern Crafter Online",
   description: "Best Shirt Store in the world",
 };
 
