@@ -103,10 +103,10 @@ function Shirts({ id }: { id: string }) {
                   >
                     <TabsList className="grid grid-cols-2">
                       <TabsTrigger value={Language.EN}>
-                        {Language.EN}
+                        PDF {Language.EN}
                       </TabsTrigger>
                       <TabsTrigger value={Language.AR}>
-                        {Language.AR}
+                        PDF {Language.AR}
                       </TabsTrigger>
                     </TabsList>
                   </Tabs>
