@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import NavBar from "@/components/layout/NavBar";
 import Footer from "@/components/layout/Footer";
+import Script from "next/script";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,6 +27,23 @@ export default function RootLayout({
   return (
     <QueryProvider>
       <html lang="en">
+        <head>
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=AW-11019862715"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('set', 'linker', {
+                'domains': ['ronotv.com', 'patterncrafteronline.com']
+              });
+              gtag('config', 'AW-11019862715');
+            `}
+          </Script>
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",

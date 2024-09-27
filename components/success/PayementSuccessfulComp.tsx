@@ -11,6 +11,7 @@ import Ronotv from "../checkout/Ronotv";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getBookShirtById } from "@/db/services/redis-service";
+import Script from "next/script";
 
 export default function PayementSuccessfulComp() {
   const router = useRouter();
@@ -35,6 +36,14 @@ export default function PayementSuccessfulComp() {
   if (data) {
     return (
       <div className="flex w-full flex-col items-center gap-7 p-4">
+        <Script id="google-analytics-conversion" strategy="afterInteractive">
+          {`
+          gtag('event', 'conversion', {
+            'send_to': 'AW-11019862715/lVjCCNGRj9cZELuF14Yp',
+            'transaction_id': ''
+          });
+        `}
+        </Script>
         <Ronotv finish />
         <SuccessCard data={data} />
       </div>
